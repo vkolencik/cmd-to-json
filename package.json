@@ -1,0 +1,36 @@
+{
+  "name": "cmd-to-json",
+  "version": "0.0.1",
+  "description": "Simple utility that generates JSON from the input parameters",
+  "main": "src/index.js",
+  "bin": {
+    "to-json": "bin/to-json.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "",
+    "test": "mocha",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vkolencik/cmd-to-json.git"
+  },
+  "keywords": [
+    "cli",
+    "json"
+  ],
+  "author": "Vojtech Kolencik <kolencik@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vkolencik/cmd-to-json/issues"
+  },
+  "homepage": "https://github.com/vkolencik/cmd-to-json#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.1"
+  }
+}
