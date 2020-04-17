@@ -1,0 +1,73 @@
+version: 2.1 # use CircleCI 2.1
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:13.8.0
+
+jobs: # a collection of steps
+  test: # runs not using Workflows must have a `build` job as entry point
+    <<: *defaults
+    working_directory: ~/repo
+    docker: # run the steps with Docker
+      - image: circleci/node:13.8.0 # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+
+      - checkout # special step to check out source code to working directory
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+
+      - run: npm ci --cache .npm --prefer-offline
+
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./.npm
+
+      - run:
+          name: lint
+          command: npm lint
+
+      - run: # run tests
+          name: test
+          command: npm test
+
+      - run: # run coverage report
+          name: code-coverage
+          command: './node_modules/.bin/nyc report --reporter=text-lcov'
+
+      - store_artifacts: # special step to save test results as as artifact
+          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: test-results.xml
+          prefix: tests
+
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: coverage
+          prefix: coverage
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test-results.xml
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - approve:
+          type: approval
+          requires: test
+      - deploy:
+          requires:
+            - approve
