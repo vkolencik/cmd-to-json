@@ -6,11 +6,14 @@
   "bin": {
     "to-json": "bin/to-json.js"
   },
+  "directories": {
+    "bin": "./bin",
+    "lib": "./src"
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "",
     "test": "nyc mocha",
     "lint": "npx eslint ."
   },
