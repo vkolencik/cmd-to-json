@@ -36,7 +36,16 @@ function getPropertyInfo(name) {
 }
 
 function formatValue(value, format) {
-  return isNaN(value) || format === 'string' ? value : Number(value);
+  if (format && !formatters[format]) {
+    throw new Error(`Unknown format "${format}"`);
+  }
+  return formatters[format || 'default'](value);
 }
+
+const formatters = {
+  default: x => Number(x) || x,
+  string: x => x,
+  singleline: x => x.replace(/[\r\n.]+/g, ' ')
+};
 
 module.exports = createJson;

@@ -27,13 +27,19 @@ describe('formatValue()',() => {
   const formatValue = index.__get__('formatValue');
 
   [
-    {value: 'a', formattedValue: 'a', format: null },
-    {value: '1', formattedValue: 1, format: null },
-    {value: '1.4', formattedValue: 1.4, format: null },
-    {value: '-1', formattedValue: -1, format: null },
-    {value: '1', formattedValue: '1', format: 'string' },
+    {value: 'a', formattedValue: 'a' },
+    {value: '1', formattedValue: 1 },
+    {value: '1.4', formattedValue: 1.4 },
+    {value: '-1', formattedValue: -1 },
+    {value: '1', format: 'string', formattedValue: '1' },
+    {value: 'a\nb', formattedValue: 'a\nb' },
+    {value: 'a\nb\r\nc\n\n\nd', format: 'singleline', formattedValue: 'a b c d' },
   ].forEach(({value, format, formattedValue}) =>
     it(`should format value ${value}`, () => {
       expect(formatValue(value, format)).to.equal(formattedValue);
     }));
+
+  it('should throw error for invalid format', () => {
+    expect(() => formatValue('x', 'asdf')).to.throw();
+  });
 });
