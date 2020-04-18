@@ -35,9 +35,24 @@ describe('to-json command', () => {
       expectedOutput: {a: 'b'}
     },
     {
+      description: 'multi-word value',
+      args: '--a="more than one word"',
+      expectedOutput: {a: 'more than one word'}
+    },
+    {
       description: 'two parameters',
       args: '--a=b --c=d',
       expectedOutput: {a: 'b', c: 'd'}
+    },
+    {
+      description: 'number values',
+      args: '--a=1 --b=1.2345 --c=12e4 --d=-5 --e:string=27',
+      expectedOutput: {a: 1, b: 1.2345, c: 120000, d: -5, e: '27'}
+    },
+    {
+      description: 'array',
+      args: '--a=x --a=y --a=z',
+      expectedOutput: {a: ['x', 'y', 'z']}
     }
   ].forEach(({args, expectedOutput, description}) =>
     it(`should return json representation of parameters - ${description}`, async () => {
