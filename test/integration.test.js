@@ -4,9 +4,9 @@ const chai = require('chai');
 chai.use(require('./chai-helpers/jsonEqual'));
 const expect = chai.expect;
 
-function runCmd(cmd) {
+function runCmd(cmd, env = {}) {
   return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
+    exec(cmd, {env: {...env, ...process.env}}, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -40,6 +40,11 @@ describe('to-json command', () => {
       expectedOutput: {a: 'more than one word'}
     },
     {
+      description: 'back-slash',
+      args: '--a="x\\y"',
+      expectedOutput: {a: 'x\\y'}
+    },
+    {
       description: 'two parameters',
       args: '--a=b --c=d',
       expectedOutput: {a: 'b', c: 'd'}
@@ -59,4 +64,18 @@ describe('to-json command', () => {
       const {output} = await runCmd(`to-json ${args}`);
       expect(output).to.jsonEqual(JSON.stringify(expectedOutput));
     }));
+
+  if (process.platform !== 'win32') {
+    // this test uses env var containing newline string and doesn't work on windows
+
+    [
+      {envVarValue: 'a\nb\r\n\r\nc', format: 'singleline', expectedOutputJson: '{"a": "a b c"}'},
+      {envVarValue: 'a\nb\r\n\r\nc', format: 'default', expectedOutputJson: '{"a": "a\\nb\\r\\n\\r\\nc"}'},
+    ].forEach(({envVarValue, format, expectedOutputJson}) => {
+      it('should format multiline string correctly', async () => {
+        const {output} = await runCmd(`to-json --a:${format}="$x"`, {x: envVarValue});
+        expect(output).to.jsonEqual(expectedOutputJson);
+      });
+    });
+  }
 });
