@@ -1,6 +1,8 @@
 const {exec} = require('child_process');
-const {describe, it } = require('mocha');
-const { expect } = require('chai');
+const {describe, it} = require('mocha');
+const chai = require('chai');
+chai.use(require('./chai-helpers/jsonEqual'));
+const expect = chai.expect;
 
 function runCmd(cmd) {
   return new Promise((resolve, reject) => {
@@ -21,11 +23,25 @@ function runCmd(cmd) {
 }
 
 describe('to-json command', () => {
-  it('should return empty json when called without parameters', (done) => {
-    runCmd('to-json')
-      .then(({output}) => {
-        expect(output).to.equal('{}');
-        done();
-      });
+  it('should return empty json when called without arguments', async () => {
+    const {output} = await runCmd('to-json');
+    expect(output).to.equal('{}');
   });
+
+  [
+    {
+      description: 'single parameter',
+      args: '--a=b',
+      expectedOutput: {a: 'b'}
+    },
+    {
+      description: 'two parameters',
+      args: '--a=b --c=d',
+      expectedOutput: {a: 'b', c: 'd'}
+    }
+  ].forEach(({args, expectedOutput, description}) =>
+    it(`should return json representation of parameters - ${description}`, async () => {
+      const {output} = await runCmd(`to-json ${args}`);
+      expect(output).to.jsonEqual(JSON.stringify(expectedOutput));
+    }));
 });
