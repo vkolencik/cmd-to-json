@@ -8,11 +8,11 @@ function processArguments(args) {
 
   for (const arg of args) {
     const [propertyInfo, value] = arg.split('=');
-    const {name} = getPropertyInfo(propertyInfo);
-    const formattedValue = formatValue(value);
+    const {name, format} = getPropertyInfo(propertyInfo);
+    const formattedValue = formatValue(value, format);
 
     if (!result[name]) {
-      result[name] = formatValue(value);
+      result[name] = formattedValue;
     } else if (Array.isArray(result[name])) {
       result[name].push(formattedValue);
     } else {
@@ -24,19 +24,19 @@ function processArguments(args) {
 }
 
 function getPropertyInfo(name) {
-  const components = name.match(/^--([^:]+):?(.*)$/);
+  const components = name.match(/^--([^:]+):?(\w*)$/);
   if (!components) {
     throw new Error('Property parameters must begin with double dash, like this: "--name=John"');
   }
 
   return {
     name: components[1],
-    type: components[2]
+    format: components[2] || null
   };
 }
 
-function formatValue(value) {
-  return Number(value) || value;
+function formatValue(value, format) {
+  return isNaN(value) || format === 'string' ? value : Number(value);
 }
 
 module.exports = createJson;

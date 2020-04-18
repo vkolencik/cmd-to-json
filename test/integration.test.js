@@ -46,8 +46,8 @@ describe('to-json command', () => {
     },
     {
       description: 'number values',
-      args: '--a=1 --b=1.2345 --c=12e4',
-      expectedOutput: {a: 1, b: 1.2345, c: 120000}
+      args: '--a=1 --b=1.2345 --c=12e4 --d=-5 --e:string=27',
+      expectedOutput: {a: 1, b: 1.2345, c: 120000, d: -5, e: '27'}
     },
     {
       description: 'array',
