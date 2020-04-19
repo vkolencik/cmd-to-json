@@ -28,7 +28,7 @@ function processArguments(args) {
 function getPropertyInfo(name) {
   const components = name.match(/^([^:]+):?(\w*)$/);
   if (!components) {
-    throw new Error('Parameters must be in the form name="John"');
+    throw new Error('Parameters must be in the form name="John" (or name:string="John")');
   }
 
   return {
