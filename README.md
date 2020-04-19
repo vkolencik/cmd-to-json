@@ -4,7 +4,7 @@
 
 # cmd-to-json
 
-A simple CLI utility for creating JSONs from the command line.
+A simple CLI utility for creating JSONs from command line.
 
 ## Installation 
 ```
