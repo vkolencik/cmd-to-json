@@ -31,32 +31,32 @@ describe('to-json command', () => {
   [
     {
       description: 'single parameter',
-      args: '--a=b',
+      args: 'a=b',
       expectedOutput: {a: 'b'}
     },
     {
       description: 'multi-word value',
-      args: '--a="more than one word"',
+      args: 'a="more than one word"',
       expectedOutput: {a: 'more than one word'}
     },
     {
       description: 'back-slash',
-      args: '--a="x\\y"',
+      args: 'a="x\\y"',
       expectedOutput: {a: 'x\\y'}
     },
     {
       description: 'two parameters',
-      args: '--a=b --c=d',
+      args: 'a=b c=d',
       expectedOutput: {a: 'b', c: 'd'}
     },
     {
       description: 'number values',
-      args: '--a=1 --b=1.2345 --c=12e4 --d=-5 --e:string=27',
+      args: 'a=1 b=1.2345 c=12e4 d=-5 e:string=27',
       expectedOutput: {a: 1, b: 1.2345, c: 120000, d: -5, e: '27'}
     },
     {
       description: 'array',
-      args: '--a=x --a=y --a=z',
+      args: 'a=x a=y a=z',
       expectedOutput: {a: ['x', 'y', 'z']}
     }
   ].forEach(({args, expectedOutput, description}) =>
@@ -73,7 +73,7 @@ describe('to-json command', () => {
       {envVarValue: 'a\nb\r\n\r\nc', format: 'default', expectedOutputJson: '{"a": "a\\nb\\r\\n\\r\\nc"}'},
     ].forEach(({envVarValue, format, expectedOutputJson}) => {
       it('should format multiline string correctly', async () => {
-        const {output} = await runCmd(`to-json --a:${format}="$x"`, {x: envVarValue});
+        const {output} = await runCmd(`to-json a:${format}="$x"`, {x: envVarValue});
         expect(output).to.jsonEqual(expectedOutputJson);
       });
     });
