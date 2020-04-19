@@ -2,7 +2,7 @@
   "name": "cmd-to-json",
   "version": "0.0.1",
   "description": "Simple utility that generates JSON from the input parameters",
-  "main": "src/index.js",
+  "main": "src/create-json.js",
   "bin": {
     "to-json": "bin/to-json.js"
   },

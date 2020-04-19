@@ -3,6 +3,8 @@ function createJson(args) {
   return JSON.stringify(result);
 }
 
+module.exports = createJson;
+
 function processArguments(args) {
   const result = {};
 
@@ -61,5 +63,3 @@ const formatters = [
   // special formatters that need to be explicitly specified;
   { name: 'singleline', supports: () => true, format: x => x.replace(/[\r\n.]+/g, ' ') }
 ];
-
-module.exports = createJson;

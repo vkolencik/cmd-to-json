@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-process.stdout.write(require('../src/index')(process.argv));
+process.stdout.write(require('../src/create-json')(process.argv));

@@ -1,7 +1,7 @@
 const rewire = require('rewire');
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
-const index = rewire('../src/index.js');
+const index = rewire('../src/create-json.js');
 
 describe('getPropertyInfo()',() => {
   const getPropertyInfo = index.__get__('getPropertyInfo');
