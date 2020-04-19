@@ -1,5 +1,5 @@
 function createJson(args) {
-  let result = processArguments(args.slice(2));
+  let result = processArguments(args);
   return JSON.stringify(result);
 }
 
