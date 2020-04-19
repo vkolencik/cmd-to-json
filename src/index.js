@@ -36,18 +36,30 @@ function getPropertyInfo(name) {
 }
 
 function formatValue(value, format) {
-  let formatter = formatters.find(f => f.name === (format || 'default'));
+  let formatter = formatters.find(f => f.name === (format));
+
+  if (format) {
+    if (!formatter) {
+      throw new Error(`Unknown format "${format}"`);
+    } else if (!formatter.supports(value)) {
+      throw new Error(`Value "${value} cannot be formatted as ${format}`);
+    }
+  }
+
   if (!formatter) {
-    throw new Error(`Unknown format "${format}"`);
+    formatter =  formatters.find(f => f.supports(value));
   }
 
   return formatter.format(value);
 }
 
 const formatters = [
-  { name: 'default', format: x => Number(x) || x },
-  { name: 'string', format: x => x, },
-  { name: 'singleline', format: x => x.replace(/[\r\n.]+/g, ' ') }
+  { name: 'boolean', supports: x => ['true', 'false'].includes(x.toLowerCase()), format: x => x === 'true' },
+  { name: 'number', supports: x => !isNaN(x), format: x => Number(x) },
+  { name: 'string', supports: () => true, format: x => x }, // fallback format
+
+  // special formatters that need to be explicitly specified;
+  { name: 'singleline', supports: () => true, format: x => x.replace(/[\r\n.]+/g, ' ') }
 ];
 
 module.exports = createJson;
