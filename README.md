@@ -33,8 +33,7 @@ which will yield
 ```
 
 Apart from `string`, there are `number` and `boolean` formats that can be used
-for input validation (i.e. an error is thrown when the value does not conform
-to the format).
+for input validation (e.g. `to-json age:number="foo"` will throw an error).
 
 Full list of formats:
 
