@@ -56,6 +56,11 @@ describe('to-json command', () => {
       expectedOutput: {age: 31, height: 1.7345, income: 120000, temperature: -5, streetNumber: '27', married: true, word: 'true'}
     },
     {
+      description: 'different property naming conventions',
+      args: 'first_name="Snake" middle-name="Kebab" lastName="Camel"',
+      expectedOutput: {'first_name': 'Snake', 'middle-name': 'Kebab', 'lastName': 'Camel'}
+    },
+    {
       description: 'array',
       args: 'a=x a=y a=z',
       expectedOutput: {a: ['x', 'y', 'z']}

@@ -9,6 +9,8 @@ describe('getPropertyInfo()',() => {
   [
     {propertyInfo: 'a', name: 'a', format: null},
     {propertyInfo: 'a:number', name: 'a', format: 'number'},
+    {propertyInfo: 'a_b', name: 'a_b', format: null},
+    {propertyInfo: 'a-b', name: 'a-b', format: null},
   ].forEach(({propertyInfo, name, format}) =>
     it(`should extract property info from string "${propertyInfo}"`, () => {
       expect(getPropertyInfo(propertyInfo)).to.deep.equal({name: name, format: format});
