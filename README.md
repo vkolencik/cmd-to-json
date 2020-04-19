@@ -12,7 +12,7 @@ npm i -g cmd-to-json
 ```
 
 ## Usage
-Create JSON in command line by specifying properties and their values:
+Create JSON from command line by specifying properties and their values:
 ```
 to-json name="John Doe" age=32 married=true
 ```
