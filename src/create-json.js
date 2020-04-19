@@ -10,16 +10,10 @@ function processArguments(args) {
 
   for (const arg of args) {
     const [propertyInfo, value] = arg.split('=');
-    const {name, format} = getPropertyInfo(propertyInfo);
+    const {path, format} = getPropertyInfo(propertyInfo);
     const formattedValue = formatValue(value, format);
 
-    if (!result[name]) {
-      result[name] = formattedValue;
-    } else if (Array.isArray(result[name])) {
-      result[name].push(formattedValue);
-    } else {
-      result[name] = [result[name], formattedValue];
-    }
+    result[path[0]] = formattedValue;
   }
 
   return result;
@@ -32,7 +26,7 @@ function getPropertyInfo(name) {
   }
 
   return {
-    name: components[1],
+    path: components[1].split('.'),
     format: components[2] || null
   };
 }

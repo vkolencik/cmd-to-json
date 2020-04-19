@@ -58,11 +58,6 @@ describe('to-json command', () => {
       description: 'different property naming conventions',
       args: 'first_name="Snake" middle-name="Kebab" lastName="Camel"',
       expectedOutput: {'first_name': 'Snake', 'middle-name': 'Kebab', 'lastName': 'Camel'}
-    },
-    {
-      description: 'array',
-      args: 'a=x a=y a=z',
-      expectedOutput: {a: ['x', 'y', 'z']}
     }
   ].forEach(({args, expectedOutput, description}) =>
     it(`should return json representation of parameters - ${description}`, async () => {

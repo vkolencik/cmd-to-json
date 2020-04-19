@@ -7,13 +7,14 @@ describe('getPropertyInfo()',() => {
   const getPropertyInfo = index.__get__('getPropertyInfo');
 
   [
-    {propertyInfo: 'a', name: 'a', format: null},
-    {propertyInfo: 'a:number', name: 'a', format: 'number'},
-    {propertyInfo: 'a_b', name: 'a_b', format: null},
-    {propertyInfo: 'a-b', name: 'a-b', format: null},
-  ].forEach(({propertyInfo, name, format}) =>
+    {propertyInfo: 'a', expectedPath: ['a'], format: null},
+    {propertyInfo: 'a:number', expectedPath: ['a'], format: 'number'},
+    {propertyInfo: 'a_b', expectedPath: ['a_b'], format: null},
+    {propertyInfo: 'a-b', expectedPath: ['a-b'], format: null},
+    {propertyInfo: 'a.b.c', expectedPath: ['a','b','c'], format: null},
+  ].forEach(({propertyInfo, expectedPath, format}) =>
     it(`should extract property info from string "${propertyInfo}"`, () => {
-      expect(getPropertyInfo(propertyInfo)).to.deep.equal({name: name, format: format});
+      expect(getPropertyInfo(propertyInfo)).to.deep.equal({path: expectedPath, format: format});
     }));
 
   [
