@@ -48,6 +48,7 @@ function formatValue(value, format) {
     }
   }
 
+  // no explicit format specified → find the first one that fits:
   if (!formatter) {
     formatter =  formatters.find(f => f.supports(value));
   }
