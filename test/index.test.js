@@ -49,8 +49,9 @@ describe('formatValue()',() => {
     {value: 'true', format: 'asdf'},
     {value: 'x', format: 'number'},
     {value: 'x', format: 'boolean'},
-    {value: '1,1', format: 'number'},
-  ].forEach(({value, format}) => it(`should reject value ${value} with format ${format}`, () => {
+    {value: '1,1', format: 'number'}
+  ].forEach(({value, format}) => it(`should reject value ${value} with format ${format}`, (done) => {
     expect(() => formatValue(value, format)).to.throw();
+    done();
   }));
 });

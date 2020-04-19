@@ -1,2 +1,7 @@
 #!/usr/bin/env node
-process.stdout.write(require('../src/create-json')(process.argv.slice(2)));
+try {
+  process.stdout.write(require('../src/create-json')(process.argv.slice(2)));
+} catch (e) {
+  console.error(e.message);
+  process.exit(1);
+}

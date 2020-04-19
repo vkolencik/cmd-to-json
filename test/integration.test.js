@@ -2,7 +2,6 @@ const {exec} = require('child_process');
 const {describe, it} = require('mocha');
 const chai = require('chai');
 chai.use(require('./chai-helpers/jsonEqual'));
-chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
 function runCmd(cmd, env = {}) {
@@ -75,8 +74,11 @@ describe('to-json command', () => {
     'a:asdf=xyz',
     'a:bool=xyz',
     'a:number=a1'
-  ].forEach(invalidInput => it(`should reject ${invalidInput} because of invalid format`, async () => {
-    expect(runCmd(`to-json ${invalidInput}`)).to.be.rejected;
+  ].forEach(invalidInput => it(`should reject ${invalidInput} because of invalid format`, (done) => {
+    runCmd(`to-json ${invalidInput}`).catch(({errorOutput}) => {
+      expect(errorOutput).to.not.be.empty;
+      done();
+    });
   }));
 
   if (process.platform !== 'win32') {
