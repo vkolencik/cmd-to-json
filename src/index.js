@@ -36,16 +36,18 @@ function getPropertyInfo(name) {
 }
 
 function formatValue(value, format) {
-  if (format && !formatters[format]) {
+  let formatter = formatters.find(f => f.name === (format || 'default'));
+  if (!formatter) {
     throw new Error(`Unknown format "${format}"`);
   }
-  return formatters[format || 'default'](value);
+
+  return formatter.format(value);
 }
 
-const formatters = {
-  default: x => Number(x) || x,
-  string: x => x,
-  singleline: x => x.replace(/[\r\n.]+/g, ' ')
-};
+const formatters = [
+  { name: 'default', format: x => Number(x) || x },
+  { name: 'string', format: x => x, },
+  { name: 'singleline', format: x => x.replace(/[\r\n.]+/g, ' ') }
+];
 
 module.exports = createJson;
