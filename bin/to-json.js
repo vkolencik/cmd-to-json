@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../src/index')(process.argv);
+process.stdout.write(require('../src/index')(process.argv));
