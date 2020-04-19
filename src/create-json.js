@@ -5,21 +5,32 @@ function createJson(args) {
 
 module.exports = createJson;
 
+function setValueToObject(path, value, object) {
+  let context = object;
+  for (let propertyName of path.slice(0, path.length -1)) {
+    if (context[propertyName] === undefined) {
+      context[propertyName] = {};
+    } else if (typeof context[propertyName] !== 'object') {
+      throw Error(`Invalid path ${path.join('→')}, there's already a value in the way (${context[propertyName]})`);
+    }
+    context = context[propertyName];
+  }
+
+  if (context[path[path.length - 1]] && typeof context[path[path.length - 1]] === 'object') {
+    throw Error(`Invalid path ${path.join('→')}, there's already a deeper structure in the way`);
+  }
+  context[path[path.length - 1]] = value;
+}
+
 function processArguments(args) {
   const result = {};
 
   for (const arg of args) {
     const [propertyInfo, value] = arg.split('=');
-    const {name, format} = getPropertyInfo(propertyInfo);
+    const {path, format} = getPropertyInfo(propertyInfo);
     const formattedValue = formatValue(value, format);
 
-    if (!result[name]) {
-      result[name] = formattedValue;
-    } else if (Array.isArray(result[name])) {
-      result[name].push(formattedValue);
-    } else {
-      result[name] = [result[name], formattedValue];
-    }
+    setValueToObject(path, formattedValue, result);
   }
 
   return result;
@@ -32,7 +43,7 @@ function getPropertyInfo(name) {
   }
 
   return {
-    name: components[1],
+    path: components[1].split('.'),
     format: components[2] || null
   };
 }

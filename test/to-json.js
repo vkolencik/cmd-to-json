@@ -7,13 +7,14 @@ describe('getPropertyInfo()',() => {
   const getPropertyInfo = index.__get__('getPropertyInfo');
 
   [
-    {propertyInfo: 'a', name: 'a', format: null},
-    {propertyInfo: 'a:number', name: 'a', format: 'number'},
-    {propertyInfo: 'a_b', name: 'a_b', format: null},
-    {propertyInfo: 'a-b', name: 'a-b', format: null},
-  ].forEach(({propertyInfo, name, format}) =>
+    {propertyInfo: 'a', expectedPath: ['a'], format: null},
+    {propertyInfo: 'a:number', expectedPath: ['a'], format: 'number'},
+    {propertyInfo: 'a_b', expectedPath: ['a_b'], format: null},
+    {propertyInfo: 'a-b', expectedPath: ['a-b'], format: null},
+    {propertyInfo: 'a.b.c', expectedPath: ['a','b','c'], format: null},
+  ].forEach(({propertyInfo, expectedPath, format}) =>
     it(`should extract property info from string "${propertyInfo}"`, () => {
-      expect(getPropertyInfo(propertyInfo)).to.deep.equal({name: name, format: format});
+      expect(getPropertyInfo(propertyInfo)).to.deep.equal({path: expectedPath, format: format});
     }));
 
   [
@@ -53,5 +54,24 @@ describe('formatValue()',() => {
   ].forEach(({value, format}) => it(`should reject value ${value} with format ${format}`, (done) => {
     expect(() => formatValue(value, format)).to.throw();
     done();
+  }));
+});
+
+describe('setValueToObject()', () => {
+  const setValueToObject = index.__get__('setValueToObject');
+
+  [
+    {path: ['a', 'b', 'c'], value: 'x', object: {}, expectedResult: {a: {b: {c: 'x'}}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: 'a'}}}, expectedResult: {a: {b: {c: 'x'}}}},
+  ].forEach(({path, value, object, expectedResult}) => it(`should set value to path ${path}`, () => {
+    setValueToObject(path, value, object);
+    expect(object).to.deep.equal(expectedResult);
+  }));
+
+  [
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: 'x'}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: {d: 'a'}}}}}
+  ].forEach(({path, value, object}) => it(`should throw for invalid path ${path}`, () => {
+    expect(() => setValueToObject(path, value, object)).to.throw();
   }));
 });

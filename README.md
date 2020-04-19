@@ -6,24 +6,46 @@
 
 A simple CLI utility for creating JSONs from the command line.
 
-# Usage
-
-Install:
+## Installation 
 ```
 npm i -g cmd-to-json
 ```
 
-Then, you can create JSON in shell by specifying properties and their values:
+## Usage
+Create JSON in command line by specifying properties and their values:
 ```
 to-json name="John Doe" age=32 married=true
 ```
-gives this output:
+gives this output (formatted for better readability):
 ```json
-{"name":"John Doe","age":32,"married":true}
+{
+  "name": "John Doe",
+  "age": 32,
+  "married": true
+}
 ```
 
+### Nested objects
+Nested structures can be created by using dots in property names:
+```
+to-json version=1 person.name="John" person.age=32
+```
+will yield:
+```json
+{
+  "version": 1,
+  "person": {
+    "name": "John",
+    "age": 32
+  }
+}
+```
+
+Arrays are not yet supported.
+
 ## Explicit formats
-Numbers and booleans are formatted automatically. You may force the format of a property like this:
+
+Numbers and booleans are recognized and formatted automatically. You may force a specific format like this:
 ```
 to-json houseNumber:string=134 age:number=35
 ```
@@ -32,10 +54,10 @@ which will yield
 {"houseNumber":"134","age":35}
 ```
 
-`string` suppresses the default formatting, `number` and `boolean` formats that can be used
+Appending `:string` suppresses automatic formatting. `:number` and `:boolean` can be used
 for input validation (e.g. `to-json age:number="foo"` will throw an error).
 
-Full list of formats:
+###Full list of formats
 
 | Format       | Valid value examples          | Resulting property value            | Note
 |--------------|-------------------------------|-------------------------------------|---
