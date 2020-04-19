@@ -7,17 +7,15 @@ describe('getPropertyInfo()',() => {
   const getPropertyInfo = index.__get__('getPropertyInfo');
 
   [
-    {propertyInfo: '--a', name: 'a', format: null},
-    {propertyInfo: '--a:number', name: 'a', format: 'number'},
+    {propertyInfo: 'a', name: 'a', format: null},
+    {propertyInfo: 'a:number', name: 'a', format: 'number'},
   ].forEach(({propertyInfo, name, format}) =>
     it(`should extract property info from string "${propertyInfo}"`, () => {
       expect(getPropertyInfo(propertyInfo)).to.deep.equal({name: name, format: format});
     }));
 
   [
-    'a',
-    'a:string',
-    '--a:string:xyz'
+    'a:string:xyz'
   ].forEach(propertyInfo => it(`should throw an error for property info string ${propertyInfo}`, () => {
     expect(() => getPropertyInfo(propertyInfo)).to.throw();
   }));
