@@ -5,6 +5,23 @@ function createJson(args) {
 
 module.exports = createJson;
 
+function setValueToObject(path, value, object) {
+  let context = object;
+  for (let propertyName of path.slice(0, path.length -1)) {
+    if (context[propertyName] === undefined) {
+      context[propertyName] = {};
+    } else if (typeof context[propertyName] !== 'object') {
+      throw Error(`Invalid path ${path.join('→')}, there's already a value in the way (${context[propertyName]})`);
+    }
+    context = context[propertyName];
+  }
+
+  if (context[path[path.length - 1]] && typeof context[path[path.length - 1]] === 'object') {
+    throw Error(`Invalid path ${path.join('→')}, there's already a deeper structure in the way`);
+  }
+  context[path[path.length - 1]] = value;
+}
+
 function processArguments(args) {
   const result = {};
 
@@ -13,7 +30,7 @@ function processArguments(args) {
     const {path, format} = getPropertyInfo(propertyInfo);
     const formattedValue = formatValue(value, format);
 
-    result[path[0]] = formattedValue;
+    setValueToObject(path, formattedValue, result);
   }
 
   return result;

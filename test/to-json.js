@@ -56,3 +56,22 @@ describe('formatValue()',() => {
     done();
   }));
 });
+
+describe('setValueToObject()', () => {
+  const setValueToObject = index.__get__('setValueToObject');
+
+  [
+    {path: ['a', 'b', 'c'], value: 'x', object: {}, expectedResult: {a: {b: {c: 'x'}}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: 'a'}}}, expectedResult: {a: {b: {c: 'x'}}}},
+  ].forEach(({path, value, object, expectedResult}) => it(`should set value to path ${path}`, () => {
+    setValueToObject(path, value, object);
+    expect(object).to.deep.equal(expectedResult);
+  }));
+
+  [
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: 'x'}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: {d: 'a'}}}}}
+  ].forEach(({path, value, object}) => it(`should throw for invalid path ${path}`, () => {
+    expect(() => setValueToObject(path, value, object)).to.throw();
+  }));
+});

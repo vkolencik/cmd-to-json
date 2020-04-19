@@ -52,12 +52,32 @@ describe('to-json command', () => {
     {
       description: 'formatted values',
       args: 'age=31 height=1.7345 income=12e4 temperature=-5 streetNumber:string=27 married=true word:string=true',
-      expectedOutput: {age: 31, height: 1.7345, income: 120000, temperature: -5, streetNumber: '27', married: true, word: 'true'}
+      expectedOutput: {
+        age: 31,
+        height: 1.7345,
+        income: 120000,
+        temperature: -5,
+        streetNumber: '27',
+        married: true,
+        word: 'true'
+      }
     },
     {
       description: 'different property naming conventions',
       args: 'first_name="Snake" middle-name="Kebab" lastName="Camel"',
       expectedOutput: {'first_name': 'Snake', 'middle-name': 'Kebab', 'lastName': 'Camel'}
+    },
+    {
+      description: 'deep members',
+      args: 'date="2020-01-01" person.name="John" person.age=32 comment.text="hello world"',
+      expectedOutput: {
+        date: '2020-01-01',
+        person: {
+          name: 'John',
+          age: 32
+        },
+        comment: {text: 'hello world'}
+      }
     }
   ].forEach(({args, expectedOutput, description}) =>
     it(`should return json representation of parameters - ${description}`, async () => {
@@ -68,7 +88,8 @@ describe('to-json command', () => {
   [
     'a:asdf=xyz',
     'a:bool=xyz',
-    'a:number=a1'
+    'a:number=a1',
+    'a.b=1 a.b.c=2'
   ].forEach(invalidInput => it(`should reject ${invalidInput} because of invalid format`, (done) => {
     runCmd(`to-json ${invalidInput}`).catch(({errorOutput}) => {
       expect(errorOutput).to.not.be.empty;
