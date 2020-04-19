@@ -5,6 +5,20 @@ function createJson(args) {
 
 module.exports = createJson;
 
+function processArguments(args) {
+  const result = {};
+
+  for (const arg of args) {
+    const [propertyInfo, value] = arg.split('=');
+    const {path, format} = getPropertyInfo(propertyInfo);
+    const formattedValue = formatValue(value, format);
+
+    setValueToObject(path, formattedValue, result);
+  }
+
+  return result;
+}
+
 function setValueToObject(path, value, object) {
   let context = object;
   for (let propertyName of path.slice(0, path.length -1)) {
@@ -22,20 +36,6 @@ function setValueToObject(path, value, object) {
   context[path[path.length - 1]] = value;
 }
 
-function processArguments(args) {
-  const result = {};
-
-  for (const arg of args) {
-    const [propertyInfo, value] = arg.split('=');
-    const {path, format} = getPropertyInfo(propertyInfo);
-    const formattedValue = formatValue(value, format);
-
-    setValueToObject(path, formattedValue, result);
-  }
-
-  return result;
-}
-
 function getPropertyInfo(name) {
   const components = name.match(/^([^:]+):?(\w*)$/);
   if (!components) {
@@ -49,6 +49,15 @@ function getPropertyInfo(name) {
 }
 
 function formatValue(value, format) {
+  const formatters = [
+    { name: 'boolean', supports: x => x && ['true', 'false'].includes(x.toLowerCase()), format: x => x === 'true' },
+    { name: 'number', supports: x => !isNaN(x), format: x => Number(x) },
+    { name: 'string', supports: () => true, format: x => x }, // fallback format
+
+    // special formatters that need to be explicitly specified;
+    { name: 'singleline', supports: () => true, format: x => x.replace(/[\r\n.]+/g, ' ') }
+  ];
+
   let formatter = formatters.find(f => f.name === (format));
 
   if (format) {
@@ -66,12 +75,3 @@ function formatValue(value, format) {
 
   return formatter.format(value);
 }
-
-const formatters = [
-  { name: 'boolean', supports: x => x && ['true', 'false'].includes(x.toLowerCase()), format: x => x === 'true' },
-  { name: 'number', supports: x => !isNaN(x), format: x => Number(x) },
-  { name: 'string', supports: () => true, format: x => x }, // fallback format
-
-  // special formatters that need to be explicitly specified;
-  { name: 'singleline', supports: () => true, format: x => x.replace(/[\r\n.]+/g, ' ') }
-];
