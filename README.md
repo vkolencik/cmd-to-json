@@ -4,7 +4,7 @@
 
 # cmd-to-json
 
-This is a simple utility for creating JSONs from the command line.
+A simple CLI utility for creating JSONs from the command line.
 
 # Usage
 
@@ -13,7 +13,7 @@ Install:
 npm i -g cmd-to-json
 ```
 
-Create JSON by specifying properties and their values, like this:
+Then, you can create JSON in shell by specifying properties and their values:
 ```
 to-json name="John Doe" age=32 married=true
 ```
