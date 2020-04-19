@@ -23,26 +23,26 @@ gives this output:
 ```
 
 ## Explicit formats
-You may force format of a property like this:
+Numbers and booleans are formatted automatically. You may force the format of a property like this:
 ```
-to-json houseNumber:string=134
+to-json houseNumber:string=134 age:number=35
 ```
 which will yield
 ```json
-{"houseNumber":"134"}
+{"houseNumber":"134","age":35}
 ```
 
-Apart from `string`, there are `number` and `boolean` formats that can be used
+`string` suppresses the default formatting, `number` and `boolean` formats that can be used
 for input validation (e.g. `to-json age:number="foo"` will throw an error).
 
 Full list of formats:
 
-| Format       | Valid value examples          | Resulting property value            | Note                                            |
-|--------------|-------------------------------|-------------------------------------|-------------------------------------------------|
-| `number`     | `1`, `"1"`, `1.234`, `1e2`    | `1`, `1`, `1.234`, `100`            |                                                 |
-| `boolean`    | `true`, `false`, `TRUE`       | `true`, `false`, `true`             | Not case sensitive                              |
-| `string`     | `John`, `"John"`, `1`, `true` | `"John"`, `"John"`, `"1"`, `"true"` | Useful to suppress default formatting           | 
-| `singleline` | `more\nlines`                 | `"more lines"`                      | Replaces sequences of newlines by a space       |
+| Format       | Valid value examples          | Resulting property value            | Note
+|--------------|-------------------------------|-------------------------------------|---
+| `number`     | `1`, `"1"`, `1.234`, `1e2`    | `1`, `1`, `1.234`, `100`            | Useful for validation.
+| `boolean`    | `true`, `false`, `TRUE`       | `true`, `false`, `true`             | Dtto. Not case sensitive.
+| `string`     | `John`, `"John"`, `1`, `true` | `"John"`, `"John"`, `"1"`, `"true"` | Useful to suppress default formatting. 
+| `singleline` | `more\nlines`                 | `"more lines"`                      | Replaces sequences of newlines by a space.
 
 ## Limitations
 Currently there's no way to escape the special characters in property names
