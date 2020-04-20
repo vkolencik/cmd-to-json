@@ -25,6 +25,11 @@ gives this output (formatted for better readability):
 }
 ```
 
+Main use-case of the tool is calling APIs with `curl` from command line: 
+```
+to-json userId=123 title="Post title" body="Post body..." | curl -X POST -d @- -H "Content-type: application/json" https://jsonplaceholder.typicode.com/posts
+```
+
 ### Nested objects
 Nested structures can be created by using dots in property names:
 ```
