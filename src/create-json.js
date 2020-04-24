@@ -51,7 +51,7 @@ function getPropertyInfo(name) {
 function formatValue(value, format) {
   const formatters = [
     { name: 'boolean', supports: x => x && ['true', 'false'].includes(x.toLowerCase()), format: x => x === 'true' },
-    { name: 'number', supports: x => !isNaN(x), format: x => Number(x) },
+    { name: 'number', supports: x => x !== '' && !isNaN(x), format: x => Number(x) },
     { name: 'string', supports: () => true, format: x => x }, // fallback format
 
     // special formatters that need to be explicitly specified;

@@ -78,6 +78,11 @@ describe('to-json command', () => {
         },
         comment: {text: 'hello world'}
       }
+    },
+    {
+      description: 'empty string handling',
+      args: 'x=""',
+      expectedOutput: {x: ''}
     }
   ].forEach(({args, expectedOutput, description}) =>
     it(`should return json representation of parameters - ${description}`, async () => {
