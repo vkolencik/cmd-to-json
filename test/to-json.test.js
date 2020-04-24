@@ -42,6 +42,10 @@ describe('formatValue()',() => {
     {value: 'a\nb\r\nc\n\n\nd', format: 'singleline', formattedValue: 'a b c d' },
     {value: '', formattedValue: '' },
     {value: '"', formattedValue: '"' },
+    {value: '""', formattedValue: '""' },
+    {value: '"""', formattedValue: '"""' },
+    {value: '\'', formattedValue: '\'' },
+    {value: '`', formattedValue: '`' }
   ].forEach(({value, format, formattedValue}) =>
     it(`should format value ${value} as ${formattedValue} with format ${format}`, () => {
       expect(formatValue(value, format)).to.equal(formattedValue);
