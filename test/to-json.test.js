@@ -40,6 +40,8 @@ describe('formatValue()',() => {
     {value: 'false', formattedValue: false },
     {value: 'a\nb', formattedValue: 'a\nb' },
     {value: 'a\nb\r\nc\n\n\nd', format: 'singleline', formattedValue: 'a b c d' },
+    {value: '', formattedValue: '' },
+    {value: '"', formattedValue: '"' },
   ].forEach(({value, format, formattedValue}) =>
     it(`should format value ${value} as ${formattedValue} with format ${format}`, () => {
       expect(formatValue(value, format)).to.equal(formattedValue);
@@ -50,8 +52,10 @@ describe('formatValue()',() => {
     {value: 'true', format: 'asdf'},
     {value: 'x', format: 'number'},
     {value: 'x', format: 'boolean'},
-    {value: '1,1', format: 'number'}
-  ].forEach(({value, format}) => it(`should reject value ${value} with format ${format}`, (done) => {
+    {value: '1,1', format: 'number'},
+    {value: '', format: 'number'},
+    {value: '', format: 'boolean'}
+  ].forEach(({value, format}) => it(`should reject value "${value}" with format ${format}`, (done) => {
     expect(() => formatValue(value, format)).to.throw();
     done();
   }));
