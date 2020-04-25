@@ -1,13 +1,7 @@
 version: 2.1 # use CircleCI 2.1
 
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:13.8.0
-
 jobs:
-  build:
-    <<: *defaults
+  node-latest: &test
     working_directory: ~/repo
     docker:
       - image: circleci/node:13.8.0
@@ -48,3 +42,35 @@ jobs:
 
       - store_artifacts:
           path: ./reports/eslint/eslint.xml
+
+  node-14:
+    <<: *test
+    docker:
+      - image: circleci/node:14.0.0
+  node-13:
+    <<: *test
+    docker:
+      - image: circleci/node:13.13.0
+  node-12:
+    <<: *test
+    docker:
+      - image: circleci/node:12.16.2
+  node-10:
+    <<: *test
+    docker:
+      - image: circleci/node:10.20.1
+  node-8:
+    <<: *test
+    docker:
+      - image: circleci/node:8.17.0
+
+workflows:
+  version: 2
+  "cmd-to-json":
+    jobs:
+      - node-latest
+      - node-14
+      - node-12
+      - node-13
+      - node-10
+      - node-8
