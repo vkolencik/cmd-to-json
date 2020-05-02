@@ -11,7 +11,9 @@ describe('getPropertyInfo()',() => {
     {propertyInfo: 'a:number', expectedPath: ['a'], format: 'number'},
     {propertyInfo: 'a_b', expectedPath: ['a_b'], format: null},
     {propertyInfo: 'a-b', expectedPath: ['a-b'], format: null},
-    {propertyInfo: 'a.b.c', expectedPath: ['a','b','c'], format: null},
+    {propertyInfo: 'a.b.c', expectedPath: ['a', 'b', 'c'], format: null},
+    {propertyInfo: 'a[1].b[0].c[+].d[_]', expectedPath: ['a[1]', 'b[0]', 'c[+]', 'd[_]'], format: null},
+    {propertyInfo: 'a[0]:string', expectedPath: ['a[0]'], format: 'string'}
   ].forEach(({propertyInfo, expectedPath, format}) =>
     it(`should extract property info from string "${propertyInfo}"`, () => {
       expect(getPropertyInfo(propertyInfo)).to.deep.equal({path: expectedPath, format: format});
@@ -24,9 +26,8 @@ describe('getPropertyInfo()',() => {
   }));
 });
 
-describe('formatValue()',() => {
+describe('formatValue()', () => {
   const formatValue = index.__get__('formatValue');
-
   [
     {value: 'a', formattedValue: 'a' },
     {value: '1', formattedValue: 1 },
@@ -70,7 +71,13 @@ describe('setValueToObject()', () => {
 
   [
     {path: ['a', 'b', 'c'], value: 'x', object: {}, expectedResult: {a: {b: {c: 'x'}}}},
-    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: 'a'}}}, expectedResult: {a: {b: {c: 'x'}}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {z: 'a'}}}, expectedResult: {a: {b: {c: 'x', z: 'a'}}}},
+    {path: ['a[2]', 'c'], value: 'x', object: {a: ['a','b']}, expectedResult: {a: ['a', 'b', 'c']}},
+    {path: ['a[0]'], value: 'x', object: {}, expectedResult: ['x']},
+    {path: ['a[1]'], value: 'x', object: {}, expectedResult: [null, 'x']},
+    {path: ['a[0]'], value: 'x', object: [null, 'y'], expectedResult: ['x', 'y']},
+    {path: ['a[+]'], value: 'x', object: {}, expectedResult: {a:['x']}},
+    {path: ['a[+]'], value: 'y', object: {a:['x']}, expectedResult: {a:['x', 'y']}}
   ].forEach(({path, value, object, expectedResult}) => it(`should set value to path ${path}`, () => {
     setValueToObject(path, value, object);
     expect(object).to.deep.equal(expectedResult);
@@ -78,7 +85,9 @@ describe('setValueToObject()', () => {
 
   [
     {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: 'x'}}},
-    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: {d: 'a'}}}}}
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: 'a'}}}},
+    {path: ['a', 'b', 'c'], value: 'x', object: {a: {b: {c: {d: 'a'}}}}},
+    {path: ['a[1]'], value: 'x', object: ['a']}
   ].forEach(({path, value, object}) => it(`should throw for invalid path ${path}`, () => {
     expect(() => setValueToObject(path, value, object)).to.throw();
   }));

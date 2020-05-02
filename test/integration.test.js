@@ -83,7 +83,32 @@ describe('to-json command', () => {
       description: 'empty string handling',
       args: 'x=""',
       expectedOutput: {x: ''}
-    }
+    },
+    {
+      description: 'array',
+      args: 'points[+].x=100 points[_].y=200 points[+].x=0.1 points[_].y=0.2',
+      expectedOutput: {points: [{x: 100, y: 200}, {x: 0.1, y: 0.2}]}
+    },
+    {
+      description: 'top-level array',
+      args: '[+].x=100 [_].y=200 [+].x=0.1 [_].y=0.2',
+      expectedOutput: [{x: 100, y: 200}, {x: 0.1, y: 0.2}]
+    },
+    {
+      description: 'array with explicit indices',
+      args: 'points[0].x=100 points[0].y=200 points[1].x=0.1 points[1].y=0.2',
+      expectedOutput: {points: [{x: 100, y: 200}, {x: 0.1, y: 0.2}]}
+    },
+    {
+      description: 'top-level array with explicit indices',
+      args: '[0].x=100 [0].y=200 [1].x=0.1 [1].y=0.2',
+      expectedOutput: [{x: 100, y: 200}, {x: 0.1, y: 0.2}]
+    },
+    {
+      description: 'sparse array',
+      args: '[3]=a [6]=b',
+      expectedOutput: [null, null, null, 'a', null, null, 'b']
+    },
   ].forEach(({args, expectedOutput, description}) =>
     it(`should return json representation of parameters - ${description}`, async () => {
       const {output} = await runCmd(`to-json ${args}`);
